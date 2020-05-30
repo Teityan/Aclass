@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
   Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::get('/redirect', function (){return view('auth.redirect');})->name('redirect');
 });
 
 Route::get('/register', 'Auth\RegisterController@showRegistrationFormViaAuthRegisterController')->name('register');

@@ -20,7 +20,12 @@ class ApiController extends Controller
 
     public function user()
     {
-        return response()->json(auth()->user());
+        $user = auth()->user();
+        $user["name"] = decryptData($user["name"],"USER_KEY");
+        $user["email"] = decryptData($user["email"],"USER_KEY");
+        $user["login_id"] = decryptData($user["login_id"],"USER_KEY");
+        unset($user["hash_login_id"],$user["hash_email"],$user["twofactor"],$user["temporary"],$user["email_verified_at"],$user["created_at"],$user["updated_at"]);
+        return response()->json($user);
     }
 
     protected function respondWithToken($token)

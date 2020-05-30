@@ -28,20 +28,31 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
+    protected $redirectTo = '/home';
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+
+    public static $redirectToApp;
+
+    public function __construct(\Illuminate\Http\Request $request)
     {
         $this->middleware('guest')->except('logout');
+        $redirect = $request->input('redirect');
+        session('fromApp',false);
+        if($redirect=="app"){
+            session(['fromApp'=>true]);
+        }
     }
 
     protected function validateLogin(\Illuminate\Http\Request $request)
     {
+        if(session()->has('fromApp')){
+            $this->redirectTo = '/redirect';
+        }
+        $request->session()->forget('fromApp');
       $request->merge(['hash_login_id' => hash('sha256', $request->input('hash_login_id'))]);
 
       if(User::where('hash_login_id', $request->input('hash_login_id'))->first()===NULL){
@@ -79,5 +90,8 @@ class LoginController extends Controller
     public function username()
     {
         return 'hash_login_id';
+    }
+    public function redirectTo(){
+        return $this->redirectTo;
     }
 }

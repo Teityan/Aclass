@@ -21,4 +21,7 @@ Route::group(['middleware' => 'auth'], function () {
 
   Route::get('/twoFactor', function(){ return view('pages.others.twoFactor'); })->name('twoFactor');
   Route::post('/twoFactor', 'TwoFactorController@change');
+
+  Route::get('/token', 'Auth\ManageApiTokenController@index')->name('token');
+  Route::post('/token', 'Auth\ManageApiTokenController@change');
 });
